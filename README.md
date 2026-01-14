@@ -1,4 +1,5 @@
 # DLL Proxy Generator
+support x86 x64. because vs x64 not support __asm. so must generate .asm file. 
 This project creates a new DLL which sits between a program and the original DLL. This way you can intercept all DLL calls.  
 Game -> Your proxy DLL -> Original DLL  
 Based on ProxiFy, by Kristoffer Blasiak (https://www.codeproject.com/Articles/1179147/ProxiFy-Automatic-Proxy-DLL-Generation). 
