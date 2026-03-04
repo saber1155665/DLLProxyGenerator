@@ -259,6 +259,8 @@ void generateMainCPP(string name, vector<string> names)
 	std::fstream file;
 	file.open(name + ".cpp", std::ios::out);
 	file << "#include <windows.h>" << endl
+		<< "#include <tchar.h>" << endl
+		<< "#include <strsafe.h>" << endl
 		 << endl;
 	file << "extern \"C\" void LoadProc();"<< std::endl;
 	file << "extern \"C\"void* g_p"<< name << ";" << std::endl;
@@ -292,7 +294,7 @@ void generateMainCPP(string name, vector<string> names)
 	file << "{"<< std::endl;	
 	file << "\t\tchar path[MAX_PATH];" << std::endl;
 	file << "\t\tEnterCriticalSection(&g_cs);" << std::endl;
-	file << "\t\tstrcpy(path + GetSystemDirectory(path, MAX_PATH - " << fileNameLength << "), \"\\\\" << name << ".dll\"" <<  ");" << std::endl;
+	file << "\t\tStringCchCat(path + GetSystemDirectory(path, MAX_PATH - " << fileNameLength << "), MAX_PATH, \"\\\\" << name << ".dll\"" <<  ");" << std::endl;
 	file << "\t\tif (ucrtbase.dll) {;" << std::endl;
 	file << "\t\t\tLeaveCriticalSection(&g_cs);" << std::endl;
 	file << "\t\t\treturn;" << std::endl;
@@ -304,7 +306,7 @@ void generateMainCPP(string name, vector<string> names)
 	file << "\t\t\t((XXX)GetProcAddress(LoadLibraryW(L\"user32.dll\"), \"MessageBoxW\"))(NULL, L\"Cannot load original ucrtbase.dll library\", L\"\", MB_OK);" << std::endl;
 	file << "\t\t\tExitProcess(0);" << std::endl;
 	file << "\t\t}" << std::endl;
-	file << "else{" << std::endl;
+	file << "\t\telse{" << std::endl;
 	for (int i = 0; i < names.size(); i++)
 	{
 		file << "\t\t\t" << name << ".Orignal" << names[i] << " = GetProcAddress(" << name << ".dll, \"" << names[i] << "\");" << std::endl;
