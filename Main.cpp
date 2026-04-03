@@ -294,12 +294,13 @@ void generateMainCPP(string name, vector<string> names)
 	file << "{"<< std::endl;	
 	file << "\t\tchar path[MAX_PATH];" << std::endl;
 	file << "\t\tEnterCriticalSection(&g_cs);" << std::endl;
-	file << "\t\tStringCchCat(path + GetSystemDirectory(path, MAX_PATH - " << fileNameLength << "), MAX_PATH, \"\\\\" << name << ".dll\"" <<  ");" << std::endl;
-	file << "\t\tif (ucrtbase.dll) {;" << std::endl;
+	file << "\t\tStringCchCatA(path + GetSystemDirectoryA(path, MAX_PATH - " << fileNameLength << "), MAX_PATH, \"\\\\" << name << ".dll\"" <<  ");" << std::endl;
+	//file << "\t\tif (ucrtbase.dll) {;" << std::endl;
+    file << "\t\tif ("<< name << ".dll) {;" << std::endl;
 	file << "\t\t\tLeaveCriticalSection(&g_cs);" << std::endl;
 	file << "\t\t\treturn;" << std::endl;
 	file << "\t\t}" << std::endl;
-	file << "\t\t" << name << ".dll = LoadLibraryEx(path, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);" << std::endl;
+	file << "\t\t" << name << ".dll = LoadLibraryExA(path, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);" << std::endl;
 	file << "\t\tif (" << name << ".dll == false)" << std::endl;
 	file << "\t\t{" << std::endl;
 	file << "\t\t\ttypedef int (WINAPI *XXX)(HWND , LPCWSTR ,  LPCWSTR, UINT);" << std::endl;
@@ -324,7 +325,10 @@ void generateMainCPP(string name, vector<string> names)
 	file << "\tcase DLL_PROCESS_ATTACH:" << std::endl;
 	file << "\t{" << std::endl;
 	file << "\t\tDisableThreadLibraryCalls(hModule);" << std::endl;
-	file << "\t\tmemset(&ucrtbase, 0, sizeof(ucrtbase));;" << std::endl;
+
+	//file << "\t\tmemset(&ucrtbase, 0, sizeof(ucrtbase));;" << std::endl;
+    file << "\t\tmemset(&"<< name << ", 0, sizeof("<<  name << "));;" << std::endl;
+
 	file << "\t\tInitializeCriticalSection(&g_cs);" << std::endl;
 	file << "\t\tbreak;" << std::endl;
 	file << "\t}" << std::endl;
