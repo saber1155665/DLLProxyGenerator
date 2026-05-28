@@ -263,7 +263,7 @@ void generateMainCPP(string name, vector<string> names)
 		<< "#include <strsafe.h>" << endl
 		 << endl;
 	file << "extern \"C\" void LoadProc();"<< std::endl;
-	file << "extern \"C\"void* g_p"<< name << ";" << std::endl;
+	file << "extern \"C\" void* g_p"<< name << ";" << std::endl;
 
 	file << "struct " << name << "_dll { \n"
 		 << "\tHMODULE dll;\n";
